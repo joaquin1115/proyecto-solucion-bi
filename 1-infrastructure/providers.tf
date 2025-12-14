@@ -27,7 +27,7 @@ terraform {
     resource_group_name  = "my-tfstate-rg"
     storage_account_name = "tfstatestorage12432"
     container_name       = "tfstate"
-    key                  = "demo.tfstate"
+    key                  = "demo-v2.tfstate"
   }
 }
 
