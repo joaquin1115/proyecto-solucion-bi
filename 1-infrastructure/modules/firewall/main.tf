@@ -145,23 +145,3 @@ resource "azurerm_firewall" "main" {
     public_ip_address_id = azurerm_public_ip.firewall.id
   }
 }
-
-# Diagnostic Settings
-resource "azurerm_monitor_diagnostic_setting" "firewall" {
-  name                       = "diag-firewall"
-  target_resource_id         = azurerm_firewall.main.id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
-
-  enabled_log {
-    category = "AzureFirewallApplicationRule"
-  }
-
-  enabled_log {
-    category = "AzureFirewallNetworkRule"
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
-}
