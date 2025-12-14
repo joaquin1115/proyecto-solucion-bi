@@ -23,7 +23,7 @@ resource "azurerm_container_app" "main" {
 
     container {
       name   = "backend"
-      image  = var.container_image
+      image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       cpu    = 0.5
       memory = "1Gi"
 
@@ -37,20 +37,10 @@ resource "azurerm_container_app" "main" {
     }
   }
 
-  registry {
-    server               = var.registry_server
-    username             = var.registry_username
-    password_secret_name = "registry-password"
-  }
-
-  secret {
-    name  = "registry-password"
-    value = var.registry_password
-  }
-
   ingress {
     external_enabled = true
-    target_port      = 5000
+    # The helloworld container listens on port 80
+    target_port      = 80
     traffic_weight {
       percentage      = 100
       latest_revision = true
