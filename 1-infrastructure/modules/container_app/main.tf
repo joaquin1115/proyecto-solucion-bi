@@ -40,6 +40,7 @@ resource "azurerm_container_app" "main" {
   registry {
     server               = var.registry_server
     username             = var.registry_username
+    password_secret_name = "registry-password"
   }
 
   secret {
