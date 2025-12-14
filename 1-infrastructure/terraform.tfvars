@@ -22,10 +22,10 @@ subnet_prefixes = {
 key_vault_name = "kv-demo-dashboard"
 
 # Storage
-storage_account_name = "stdemodatalake576"
+storage_account_name = "stdemodatalake575"
 
 # PostgreSQL
-postgresql_server_name    = "pg-demo-dashboard-001"
+postgresql_server_name    = "pg-demo-dashboard-002"
 postgresql_location       = "westus3"
 postgresql_admin_username = "adminuser"
 postgresql_admin_password = "SecurePass123!"
@@ -47,7 +47,7 @@ container_app_environment_name = "managedEnvironment-vnet"
 container_app_image           = "acrdemodashboard.azurecr.io/demo-backend:v1"
 
 # Static Web App
-static_web_app_name     = "demo-dashboard-frontend-001"
+static_web_app_name     = "demo-dashboard-frontend-002"
 static_web_app_location = "centralus"
 
 # Firewall
