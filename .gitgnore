@@ -1,0 +1,127 @@
+# =============================
+# Terraform
+# =============================
+**/.terraform/
+**/.terraform.lock.hcl
+
+# Terraform state files
+**/*.tfstate
+**/*.tfstate.*
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+
+# =============================
+# GitHub Actions / CI
+# =============================
+# Local runner artifacts
+.act/
+
+
+# =============================
+# Databricks
+# =============================
+# Databricks CLI config (contains tokens)
+.databrickscfg
+
+# dbx build artifacts
+.dbx/
+dist/
+build/
+
+
+# =============================
+# Python
+# =============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+
+# =============================
+# Notebooks / Data artifacts
+# =============================
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data / temp files
+*.csv
+*.parquet
+*.avro
+*.delta
+*.db
+*.sqlite
+
+# Except sample data (optional)
+!**/samples/*.csv
+
+
+# =============================
+# Shell / OS
+# =============================
+*.log
+*.tmp
+*.swp
+*.bak
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+
+# =============================
+# Editors / IDEs
+# =============================
+.vscode/
+.idea/
+*.iml
+
+# =============================
+# Security
+# =============================
+# Key files / certificates
+*.pem
+*.key
+*.pfx
+*.cer
+
+# dotenv files
+.env
+.env.*
+
+
+# =============================
+# Project specific
+# =============================
+# Optional: local deployment scripts outputs
+2-databricks-code/.deploy-cache/
