@@ -94,6 +94,32 @@ variable "databricks_managed_rg_name" {
   type        = string
 }
 
+# Databricks Cluster
+variable "databricks_cluster_name" {
+  description = "Nombre del clúster de Databricks."
+  type        = string
+}
+
+variable "databricks_spark_version" {
+  description = "Versión de Spark para el clúster."
+  type        = string
+}
+
+variable "databricks_node_type_id" {
+  description = "Tipo de nodo para el clúster."
+  type        = string
+}
+
+variable "databricks_num_workers" {
+  description = "Número de workers para el clúster."
+  type        = number
+}
+
+variable "databricks_autotermination_minutes" {
+  description = "Minutos de inactividad antes de que el clúster se termine automáticamente."
+  type        = number
+}
+
 # Container Registry
 variable "container_registry_name" {
   description = "Container Registry name"

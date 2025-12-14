@@ -66,3 +66,10 @@ alert_email = "joaquin14142@gmail.com"
 action_group_name = "ag-demo-dashboard-alerts"
 action_group_short_name = "demodash"
 environment = "dev"
+
+# Databricks Cluster
+databricks_cluster_name            = "cluster-bbva"
+databricks_spark_version           = "15.4.x-scala2.12"
+databricks_node_type_id            = "Standard_DS3_v2"
+databricks_num_workers             = 0
+databricks_autotermination_minutes = 20

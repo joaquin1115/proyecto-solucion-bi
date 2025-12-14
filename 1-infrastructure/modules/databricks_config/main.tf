@@ -13,23 +13,17 @@ resource "databricks_token" "main" {
 # Create Databricks Cluster
 resource "databricks_cluster" "main" {
   depends_on              = [time_sleep.wait_for_workspace]
-  cluster_name            = "cluster-bbva"
-  spark_version           = "15.4.x-scala2.12"
-  node_type_id            = "Standard_DS3_v2"
-  num_workers             = 0
-  autotermination_minutes = 20
+  cluster_name            = var.cluster_name
+  spark_version           = var.spark_version
+  node_type_id            = var.node_type_id
+  num_workers             = var.num_workers
+  autotermination_minutes = var.autotermination_minutes
 
   spark_conf = {
     "fs.azure.account.key.${var.storage_account_name}.dfs.core.windows.net" = var.storage_account_key
   }
 
-  custom_tags = {
-    "ResourceClass" = "SingleNode"
-  }
-
-  spark_env_vars = {
-    PYSPARK_PYTHON = "/databricks/python3/bin/python3"
-  }
+  custom_tags = var.custom_tags
 }
 
 # Store Databricks configuration in Key Vault

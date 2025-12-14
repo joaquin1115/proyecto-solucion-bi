@@ -104,6 +104,11 @@ module "databricks_config" {
   storage_account_name = module.storage.storage_account_name
   storage_account_key  = module.storage.storage_account_key
   key_vault_id         = module.key_vault.key_vault_id
+  cluster_name         = var.databricks_cluster_name
+  spark_version        = var.databricks_spark_version
+  node_type_id         = var.databricks_node_type_id
+  num_workers          = var.databricks_num_workers
+  autotermination_minutes = var.databricks_autotermination_minutes
 
   depends_on = [module.databricks_workspace]
 }
