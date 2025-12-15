@@ -1,68 +1,45 @@
 variable "resource_group_name" {
-  description = "Resource group name"
+  description = "The name of the resource group."
   type        = string
 }
 
 variable "location" {
-  description = "Azure region"
+  description = "The Azure region."
   type        = string
 }
 
 variable "container_app_name" {
-  description = "Container App name"
+  description = "The name of the Container App."
   type        = string
 }
 
 variable "environment_name" {
-  description = "Container App Environment name"
+  description = "The name of the Container App Environment."
   type        = string
 }
 
 variable "subnet_id" {
-  description = "Subnet ID"
+  description = "The ID of the infrastructure subnet for the Container App Environment."
   type        = string
 }
 
 variable "log_analytics_workspace_id" {
-  description = "Log Analytics workspace customer ID"
+  description = "The ID of the Log Analytics Workspace."
   type        = string
-}
-
-variable "log_analytics_workspace_key" {
-  description = "Log Analytics workspace shared key"
-  type        = string
-  sensitive   = true
-}
-
-variable "container_image" {
-  description = "Container image"
-  type        = string
-}
-
-variable "registry_server" {
-  description = "Container registry server"
-  type        = string
-}
-
-variable "registry_username" {
-  description = "Container registry username"
-  type        = string
-  sensitive   = true
-}
-
-variable "registry_password" {
-  description = "Container registry password"
-  type        = string
-  sensitive   = true
 }
 
 variable "environment_variables" {
-  description = "Environment variables"
+  description = "A map of environment variables for the container."
   type        = map(string)
   default     = {}
 }
 
 variable "key_vault_id" {
-  description = "Key Vault ID"
+  description = "The ID of the Key Vault to grant access to."
+  type        = string
+}
+
+variable "allowed_cors_origin" {
+  description = "The allowed origin for CORS."
   type        = string
 }

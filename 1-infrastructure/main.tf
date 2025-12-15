@@ -149,6 +149,7 @@ module "container_app" {
   registry_username            = module.container_registry.admin_username
   registry_password            = module.container_registry.admin_password
   key_vault_id                 = module.key_vault.key_vault_id
+  allowed_cors_origin          = "https://${module.static_web_app.default_host_name}"
   
   environment_variables = local.container_app_environment_variables
 
