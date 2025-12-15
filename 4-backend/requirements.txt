@@ -1,0 +1,8 @@
+Flask==2.1.2
+Flask-Cors==3.0.10
+hdfs==2.7.0
+psycopg2-binary==2.9.3
+gunicorn==20.1.0
+requests==2.28.1
+Werkzeug==2.1.2
+azure-storage-file-datalake==12.14.0

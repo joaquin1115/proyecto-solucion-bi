@@ -1,0 +1,49 @@
+name: 'Deploy: Databricks Notebooks'
+
+on:
+  workflow_dispatch:
+
+env:
+  KEY_VAULT_NAME: 'kv-demo-dashboard'
+  NOTEBOOKS_PATH: './4-databricks/notebooks'
+
+jobs:
+  deploy-notebooks:
+    runs-on: ubuntu-latest
+    name: Deploy Databricks Notebooks
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Get Databricks Credentials from Key Vault
+        id: get_db_creds
+        run: |
+          WORKSPACE_URL=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name databricks-workspace-url --query value -o tsv)
+          TOKEN=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name databricks-token --query value -o tsv)
+          echo "DATABRICKS_HOST=$WORKSPACE_URL" >> $GITHUB_ENV
+          echo "DATABRICKS_TOKEN=$TOKEN" >> $GITHUB_ENV
+
+      - name: Get Signed-in User Email
+        id: get_user
+        run: |
+          USER_EMAIL=$(az ad signed-in-user show --query userPrincipalName -o tsv)
+          echo "USER_EMAIL=$USER_EMAIL" >> $GITHUB_OUTPUT
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@v0.2.2
+
+      - name: Upload Notebooks to Workspace
+        run: >
+          databricks workspace import_dir ${{ env.NOTEBOOKS_PATH }} /Users/${{ steps.get_user.outputs.USER_EMAIL }}/ --overwrite
+
+      - name: Azure Logout
+        run: az logout
+        if: always()

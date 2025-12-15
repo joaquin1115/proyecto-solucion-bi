@@ -1,0 +1,60 @@
+name: 'CI/CD: Backend to Container App'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '2-backend/**'
+  workflow_dispatch:
+
+env:
+  RESOURCE_GROUP: 'rg-demo-dashboard'
+  CONTAINER_APP_NAME: 'demo-backend-api' # Reemplaza si es diferente
+  ACR_NAME: 'acrdemodashboard' # Reemplaza si es diferente
+  IMAGE_NAME: 'api-backend'
+  DOCKERFILE_PATH: './2-backend/Dockerfile'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Get ACR Login Server
+        id: get_acr
+        run: |
+          ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --query loginServer -o tsv)
+          echo "ACR_SERVER=$ACR_SERVER" >> $GITHUB_OUTPUT
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ steps.get_acr.outputs.ACR_SERVER }}
+          username: ${{ secrets.ARM_CLIENT_ID }}
+          password: ${{ secrets.ARM_CLIENT_SECRET }} # Necesitarás añadir ARM_CLIENT_SECRET a tus secretos de GitHub
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f ${{ env.DOCKERFILE_PATH }} ./2-backend
+          docker push ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Update Container App Image
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          container-app-name: ${{ env.CONTAINER_APP_NAME }}
+          image-to-deploy: ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Azure Logout
+        run: az logout
+        if: always()
