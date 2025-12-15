@@ -5,7 +5,10 @@ import psycopg2
 # ==========================================
 # 1️⃣ Leer CSV desde ADLS (Silver)
 # ==========================================
-path_ci = "abfss://silver@stbbvadatalake.dfs.core.windows.net/data_limpia/data_limpia_continuous_integration/data_limpia_continuous_integration.csv"
+dbutils.widgets.text("adls_endpoint", "", "1. Endpoint del Data Lake (ej: stxxx.dfs.core.windows.net)")
+adls_endpoint = dbutils.widgets.get("adls_endpoint")
+
+path_ci = f"abfss://silver@{adls_endpoint}/data_limpia/data_limpia_continuous_integration/data_limpia_continuous_integration.csv"
 
 df = spark.read.csv(path_ci, header=True, inferSchema=True)
 df = df.withColumn("fecha", F.to_date(F.col("mes"), "MM/dd/yyyy"))

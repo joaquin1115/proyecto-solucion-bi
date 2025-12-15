@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO)
 DATABRICKS_WORKSPACE_URL = os.environ.get("DATABRICKS_WORKSPACE_URL")
 DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN")
 CLUSTER_ID = os.environ.get("DATABRICKS_CLUSTER_ID")
+AZURE_STORAGE_CONNECTION_STRING = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 
 if not DATABRICKS_WORKSPACE_URL:
     raise RuntimeError("❌ ERROR: La variable DATABRICKS_WORKSPACE_URL no está definida en las variables de entorno.")
@@ -18,26 +19,36 @@ if not DATABRICKS_WORKSPACE_URL:
 if not DATABRICKS_TOKEN:
     raise RuntimeError("❌ ERROR: La variable DATABRICKS_TOKEN no está definida en las variables de entorno.")
 
+if not AZURE_STORAGE_CONNECTION_STRING:
+    raise RuntimeError("❌ ERROR: La variable AZURE_STORAGE_CONNECTION_STRING no está definida en las variables de entorno.")
+
 
 HEADERS = {
     "Authorization": f"Bearer {DATABRICKS_TOKEN}",
     "Content-Type": "application/json"
 }
 
+# Extraer el endpoint del storage account de la connection string
+def get_adls_endpoint_from_conn_str(conn_str):
+    parts = {p.split('=', 1)[0].lower(): p.split('=', 1)[1] for p in conn_str.split(';') if '=' in p}
+    account_name = parts.get('accountname')
+    return f"{account_name}.dfs.core.windows.net"
+
+ADLS_ENDPOINT = get_adls_endpoint_from_conn_str(AZURE_STORAGE_CONNECTION_STRING)
 
 # ================================
 # NOTEBOOK PATHS EN DATABRICKS
 # ================================
 NOTEBOOKS = {
     "practitioner": [
-        "/Workspace/Users/leogcardenasp@gmail.com/Limpiar Practitioner",
-        "/Workspace/Users/leogcardenasp@gmail.com/Transformar Practitioner",
-        "/Workspace/Users/leogcardenasp@gmail.com/Vista Practitioner"
+        "/Workspace/Shared/Apps/DemoDashboard/Limpiar Practitioner",
+        "/Workspace/Shared/Apps/DemoDashboard/Transformar Practitioner",
+        "/Workspace/Shared/Apps/DemoDashboard/Vista Practitioner"
     ],
     "continuous_integration": [
-        "/Workspace/Users/leogcardenasp@gmail.com/Limpiar Continuous Integration",
-        "/Workspace/Users/leogcardenasp@gmail.com/Transformar Continuous Integration",
-        "/Workspace/Users/leogcardenasp@gmail.com/Vista Continuous Integration"
+        "/Workspace/Shared/Apps/DemoDashboard/Limpiar Continuous Integration",
+        "/Workspace/Shared/Apps/DemoDashboard/Transformar Continuous Integration",
+        "/Workspace/Shared/Apps/DemoDashboard/Vista Continuous Integration"
     ]
 }
 
@@ -266,7 +277,10 @@ def trigger_notebook_run(destination: str, adls_path: str):
     if destination not in NOTEBOOKS:
         raise ValueError(f"❌ Destino inválido: {destination}. Debe ser 'practitioner' o 'continuous_integration'")
     
-    params = {"input_path": adls_path}
+    params = {
+        "input_path": adls_path,
+        "adls_endpoint": ADLS_ENDPOINT
+    }
     notebook_sequence = NOTEBOOKS[destination]
     
     logging.info("=" * 60)

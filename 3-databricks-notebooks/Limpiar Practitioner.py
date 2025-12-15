@@ -4,11 +4,16 @@ from pyspark.sql.types import DoubleType, StringType
 import re
 
 # =========================
-# 1️⃣ Rutas ADLS
+# 1️⃣ OBTENER PARÁMETROS Y CONSTRUIR RUTAS
 # =========================
-input_path = "abfss://bronze@stbbvadatalake.dfs.core.windows.net/data_sucia/data_sucia_practitioner"
-temp_path  = "abfss://silver@stbbvadatalake.dfs.core.windows.net/data_limpia/tmp_practitioner"
-final_dir  = "abfss://silver@stbbvadatalake.dfs.core.windows.net/data_limpia/data_limpia_practitioner"
+dbutils.widgets.text("input_path", "", "1. Ruta del archivo de entrada en ADLS")
+dbutils.widgets.text("adls_endpoint", "", "2. Endpoint del Data Lake (ej: stxxx.dfs.core.windows.net)")
+
+input_path = dbutils.widgets.get("input_path")
+adls_endpoint = dbutils.widgets.get("adls_endpoint")
+
+temp_path  = f"abfss://silver@{adls_endpoint}/data_limpia/tmp_practitioner"
+final_dir  = f"abfss://silver@{adls_endpoint}/data_limpia/data_limpia_practitioner"
 final_file = f"{final_dir}/data_limpia_practitioner.csv"
 
 # =========================

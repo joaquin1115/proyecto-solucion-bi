@@ -9,8 +9,10 @@ from pyspark.sql.types import DoubleType, StringType
 # ============================================================
 # 1️⃣ RUTAS EN SILVER (ADLS)
 # ============================================================
-silver_path = "abfss://silver@stbbvadatalake.dfs.core.windows.net"
-input_path  = f"{silver_path}/data_limpia/data_limpia_practitioner/data_limpia_practitioner.csv"
+dbutils.widgets.text("adls_endpoint", "", "1. Endpoint del Data Lake (ej: stxxx.dfs.core.windows.net)")
+adls_endpoint = dbutils.widgets.get("adls_endpoint")
+
+input_path  = f"abfss://silver@{adls_endpoint}/data_limpia/data_limpia_practitioner/data_limpia_practitioner.csv"
 
 # ============================================================
 # 2️⃣ LEER CSV DESDE SILVER
