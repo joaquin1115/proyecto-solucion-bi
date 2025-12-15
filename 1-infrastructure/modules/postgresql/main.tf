@@ -19,6 +19,13 @@ resource "azurerm_postgresql_flexible_server_database" "databases" {
   collation = "en_US.utf8"
 }
 
+resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_all_ips" {
+  name             = "allow-all-internet"
+  server_id        = azurerm_postgresql_flexible_server.main.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
+}
+
 # Private Endpoint
 resource "azurerm_private_endpoint" "postgresql" {
   name                = "pe-postgresql"
