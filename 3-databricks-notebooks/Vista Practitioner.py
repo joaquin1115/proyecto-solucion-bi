@@ -11,7 +11,9 @@ import psycopg2
 # 0️⃣ CONFIG — CONEXIÓN AZURE POSTGRESQL
 # ======================================================
 
-pg_url = "jdbc:postgresql://pg-bbva-dashboard.postgres.database.azure.com:5432/data_oro_practitioner"
+dbutils.widgets.text("pg_host", "", "Host del servidor PostgreSQL")
+pg_host = dbutils.widgets.get("pg_host")
+pg_url = f"jdbc:postgresql://{pg_host}:5432/data_oro_practitioner"
 pg_properties = {
     "user": "adminuser",
     "password": "SecurePass123!",
@@ -209,7 +211,7 @@ vista_df = df_calc.select(
 
 def run_pg(query):
     conn = psycopg2.connect(
-        host="pg-bbva-dashboard.postgres.database.azure.com",
+        host=pg_host,
         port=5432,
         database="data_oro_practitioner",
         user="adminuser",

@@ -6,6 +6,7 @@ import psycopg2
 # 1️⃣ Leer CSV desde ADLS (Silver)
 # ==========================================
 dbutils.widgets.text("adls_endpoint", "", "1. Endpoint del Data Lake (ej: stxxx.dfs.core.windows.net)")
+dbutils.widgets.text("pg_host", "", "2. Host del servidor PostgreSQL")
 adls_endpoint = dbutils.widgets.get("adls_endpoint")
 
 path_ci = f"abfss://silver@{adls_endpoint}/data_limpia/data_limpia_continuous_integration/data_limpia_continuous_integration.csv"
@@ -49,7 +50,8 @@ dim_servicio_n1 = (
 # ==========================================
 # 3️⃣ CONFIG PGSQL
 # ==========================================
-jdbc_url = "jdbc:postgresql://pg-bbva-dashboard.postgres.database.azure.com:5432/data_oro_ci?sslmode=require"
+pg_host = dbutils.widgets.get("pg_host")
+jdbc_url = f"jdbc:postgresql://{pg_host}:5432/data_oro_ci?sslmode=require"
 properties = {
     "user": "adminuser",
     "password": "SecurePass123!",
@@ -60,7 +62,7 @@ properties = {
 # 4️⃣ TRUNCATE + RESET IDs
 # ==========================================
 conn = psycopg2.connect(
-    host="pg-bbva-dashboard.postgres.database.azure.com",
+    host=pg_host,
     database="data_oro_ci",
     user="adminuser",
     password="SecurePass123!",

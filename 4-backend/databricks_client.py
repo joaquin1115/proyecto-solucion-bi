@@ -12,6 +12,7 @@ DATABRICKS_WORKSPACE_URL = os.environ.get("DATABRICKS_WORKSPACE_URL")
 DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN")
 CLUSTER_ID = os.environ.get("DATABRICKS_CLUSTER_ID")
 AZURE_STORAGE_CONNECTION_STRING = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
+DB_HOST = os.environ.get("DB_HOST")
 
 if not DATABRICKS_WORKSPACE_URL:
     raise RuntimeError("❌ ERROR: La variable DATABRICKS_WORKSPACE_URL no está definida en las variables de entorno.")
@@ -21,6 +22,9 @@ if not DATABRICKS_TOKEN:
 
 if not AZURE_STORAGE_CONNECTION_STRING:
     raise RuntimeError("❌ ERROR: La variable AZURE_STORAGE_CONNECTION_STRING no está definida en las variables de entorno.")
+
+if not DB_HOST:
+    raise RuntimeError("❌ ERROR: La variable DB_HOST no está definida en las variables de entorno.")
 
 
 HEADERS = {
@@ -279,7 +283,8 @@ def trigger_notebook_run(destination: str, adls_path: str):
     
     params = {
         "input_path": adls_path,
-        "adls_endpoint": ADLS_ENDPOINT
+        "adls_endpoint": ADLS_ENDPOINT,
+        "pg_host": DB_HOST
     }
     notebook_sequence = NOTEBOOKS[destination]
     

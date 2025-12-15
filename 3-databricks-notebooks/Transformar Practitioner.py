@@ -11,6 +11,7 @@ from pyspark.sql.types import DoubleType, StringType
 # ============================================================
 dbutils.widgets.text("adls_endpoint", "", "1. Endpoint del Data Lake (ej: stxxx.dfs.core.windows.net)")
 adls_endpoint = dbutils.widgets.get("adls_endpoint")
+dbutils.widgets.text("pg_host", "", "2. Host del servidor PostgreSQL")
 
 input_path  = f"abfss://silver@{adls_endpoint}/data_limpia/data_limpia_practitioner/data_limpia_practitioner.csv"
 
@@ -61,7 +62,8 @@ dim_servicio_n1 = (
 # ============================================================
 # 6️⃣ CONFIG POSTGRESQL (Azure Flexible Server)
 # ============================================================
-jdbc_url = "jdbc:postgresql://pg-bbva-dashboard.postgres.database.azure.com:5432/data_oro_practitioner"
+pg_host = dbutils.widgets.get("pg_host")
+jdbc_url = f"jdbc:postgresql://{pg_host}:5432/data_oro_practitioner"
 
 properties = {
     "user": "adminuser",
@@ -76,7 +78,7 @@ properties = {
 import psycopg2
 
 conn = psycopg2.connect(
-    host="pg-bbva-dashboard.postgres.database.azure.com",
+    host=pg_host,
     database="data_oro_practitioner",
     user="adminuser",
     password="SecurePass123!",

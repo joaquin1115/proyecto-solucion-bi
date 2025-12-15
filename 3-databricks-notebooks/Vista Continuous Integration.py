@@ -6,8 +6,9 @@ import psycopg2
 # =========================================================
 # 🔗 Conexión a PostgreSQL (AZURE)
 # =========================================================
-pg_url = "jdbc:postgresql://pg-bbva-dashboard.postgres.database.azure.com:5432/data_oro_ci?sslmode=require"
-
+dbutils.widgets.text("pg_host", "", "Host del servidor PostgreSQL")
+pg_host = dbutils.widgets.get("pg_host")
+pg_url = f"jdbc:postgresql://{pg_host}:5432/data_oro_ci?sslmode=require"
 pg_properties = {
     "user": "adminuser",
     "password": "SecurePass123!",
@@ -198,7 +199,7 @@ fact_final_ci = df_calc.select(
 # =========================================================
 def execute_postgres(query):
     conn = psycopg2.connect(
-        host="pg-bbva-dashboard.postgres.database.azure.com",
+        host=pg_host,
         port=5432,
         database="data_oro_ci",
         user="adminuser",
