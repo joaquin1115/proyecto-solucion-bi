@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  PG_SERVER_NAME: 'pg-bbva-dashboard' # Reemplaza si es diferente
-  PG_ADMIN_USER: 'adminuser' # Reemplaza si es diferente
+  PG_SERVER_NAME: 'pg-demo-dashboard-002'
+  PG_ADMIN_USER: 'adminuser'
   DB_NAME_PRACTITIONER: 'data_oro_practitioner'
   DB_NAME_CI: 'data_oro_ci'
   RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
