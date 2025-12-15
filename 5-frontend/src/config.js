@@ -1,2 +1,2 @@
-export const API_BASE_URL = "https://bbva-backend-api.blackhill-e1bbee47.eastus.azurecontainerapps.io";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                                 

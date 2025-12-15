@@ -9,6 +9,7 @@ on:
 
 env:
   RESOURCE_GROUP: 'rg-demo-dashboard'
+  BACKEND_APP_NAME: 'demo-backend-api'
   SWA_NAME: 'demo-dashboard-frontend-002'
   APP_LOCATION: './5-frontend'
   OUTPUT_LOCATION: 'dist' # Carpeta de build (ej. dist, build)
@@ -27,16 +28,22 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+
+      - name: Create .env file with backend URL
+        run: |
+          BACKEND_URL="https://$(az containerapp show --name ${{ env.BACKEND_APP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --query properties.configuration.ingress.fqdn -o tsv)"
+          echo "VITE_API_BASE_URL=${BACKEND_URL}" > ${{ env.APP_LOCATION }}/.env
+          echo "Backend URL set to ${BACKEND_URL}"
+
       - name: Install dependencies and build
         run: |
           cd ${{ env.APP_LOCATION }}
           npm install
           npm run build
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
 
       - name: Get Static Web App Deployment Token
         id: get_token
