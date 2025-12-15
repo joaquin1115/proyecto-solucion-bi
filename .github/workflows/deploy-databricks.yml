@@ -6,6 +6,7 @@ on:
 env:
   KEY_VAULT_NAME: 'kv-demo-dashboard'
   NOTEBOOKS_PATH: './4-databricks/notebooks'
+  DATABRICKS_TARGET_PATH: '/Shared/Apps/DemoDashboard' # Ruta de despliegue compartida
 
 jobs:
   deploy-notebooks:
@@ -29,18 +30,12 @@ jobs:
           echo "DATABRICKS_HOST=$WORKSPACE_URL" >> $GITHUB_ENV
           echo "DATABRICKS_TOKEN=$TOKEN" >> $GITHUB_ENV
 
-      - name: Get Signed-in User Email
-        id: get_user
-        run: |
-          USER_EMAIL=$(az ad signed-in-user show --query userPrincipalName -o tsv)
-          echo "USER_EMAIL=$USER_EMAIL" >> $GITHUB_OUTPUT
-
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@v0.218.0
 
       - name: Upload Notebooks to Workspace
         run: >
-          databricks workspace import_dir ${{ env.NOTEBOOKS_PATH }} /Users/${{ steps.get_user.outputs.USER_EMAIL }}/ --overwrite
+          databricks workspace import_dir ${{ env.NOTEBOOKS_PATH }} ${{ env.DATABRICKS_TARGET_PATH }} --overwrite
 
       - name: Azure Logout
         run: az logout
