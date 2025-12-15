@@ -8,7 +8,7 @@ env:
   PG_ADMIN_USER: 'adminuser'
   DB_NAME_PRACTITIONER: 'data_oro_practitioner'
   DB_NAME_CI: 'data_oro_ci'
-  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
+  RESOURCE_GROUP: 'rg-demo-dashboard'
   SQL_PRACTITIONER_PATH: './5-database/queries/query_practitioner.sql'
   SQL_CI_PATH: './5-database/queries/query_ci.sql'
 
