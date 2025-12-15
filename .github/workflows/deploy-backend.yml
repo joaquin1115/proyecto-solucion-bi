@@ -9,6 +9,7 @@ on:
 
 env:
   RESOURCE_GROUP: 'rg-demo-dashboard'
+  KEY_VAULT_NAME: 'kv-demo-dashboard'
   CONTAINER_APP_NAME: 'demo-backend-api'
   ACR_NAME: 'acrdemodashboard'
   IMAGE_NAME: 'api-backend'
@@ -28,30 +29,38 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
 
-      - name: Get ACR Login Server
-        id: get_acr
+      - name: Get ACR Credentials from Key Vault
+        id: get_acr_creds
         run: |
-          ACR_SERVER=$(az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --query loginServer -o tsv)
+          ACR_SERVER=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name acr-server --query value -o tsv)
+          ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name acr-username --query value -o tsv)
+          ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name acr-password --query value -o tsv)
           echo "ACR_SERVER=$ACR_SERVER" >> $GITHUB_OUTPUT
+          echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_OUTPUT
+          echo "::add-mask::$ACR_PASSWORD"
+          echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_OUTPUT
 
       - name: Log in to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ steps.get_acr.outputs.ACR_SERVER }}
-          username: ${{ secrets.ARM_CLIENT_ID }}
-          password: ${{ secrets.ARM_CLIENT_SECRET }} # Necesitarás añadir ARM_CLIENT_SECRET a tus secretos de GitHub
+          login-server: ${{ steps.get_acr_creds.outputs.ACR_SERVER }}
+          username: ${{ steps.get_acr_creds.outputs.ACR_USERNAME }}
+          password: ${{ steps.get_acr_creds.outputs.ACR_PASSWORD }}
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f ${{ env.DOCKERFILE_PATH }} ./4-backend
-          docker push ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker build -t ${{ steps.get_acr_creds.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f ${{ env.DOCKERFILE_PATH }} ./4-backend
+          docker push ${{ steps.get_acr_creds.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Update Container App Image
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          imageToDeploy: ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          registryUrl: ${{ steps.get_acr_creds.outputs.ACR_SERVER }}
+          registryUsername: ${{ steps.get_acr_creds.outputs.ACR_USERNAME }}
+          registryPassword: ${{ steps.get_acr_creds.outputs.ACR_PASSWORD }}
+          imageToDeploy: ${{ steps.get_acr_creds.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Azure Logout
         run: az logout
