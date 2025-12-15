@@ -9,8 +9,8 @@ on:
 
 env:
   RESOURCE_GROUP: 'rg-demo-dashboard'
-  CONTAINER_APP_NAME: 'demo-backend-api' # Reemplaza si es diferente
-  ACR_NAME: 'acrdemodashboard' # Reemplaza si es diferente
+  CONTAINER_APP_NAME: 'demo-backend-api'
+  ACR_NAME: 'acrdemodashboard'
   IMAGE_NAME: 'api-backend'
   DOCKERFILE_PATH: './2-backend/Dockerfile'
 
@@ -26,9 +26,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.ARM_CLIENT_ID }}
-          tenant-id: ${{ secrets.ARM_TENANT_ID }}
-          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
 
       - name: Get ACR Login Server
         id: get_acr
