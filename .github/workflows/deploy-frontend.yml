@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
+  RESOURCE_GROUP: 'rg-demo-dashboard'
   SWA_NAME: 'demo-dashboard-frontend'
   APP_LOCATION: './5-frontend'
   OUTPUT_LOCATION: 'dist' # Carpeta de build (ej. dist, build)

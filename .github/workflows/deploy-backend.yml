@@ -49,9 +49,9 @@ jobs:
       - name: Update Container App Image
         uses: azure/container-apps-deploy-action@v1
         with:
-          resource-group: ${{ env.RESOURCE_GROUP }}
-          container-app-name: ${{ env.CONTAINER_APP_NAME }}
-          image-to-deploy: ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Azure Logout
         run: az logout
