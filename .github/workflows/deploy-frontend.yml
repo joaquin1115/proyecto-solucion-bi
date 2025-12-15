@@ -9,7 +9,7 @@ on:
 
 env:
   RESOURCE_GROUP: 'rg-demo-dashboard'
-  SWA_NAME: 'demo-dashboard-frontend'
+  SWA_NAME: 'demo-dashboard-frontend-002'
   APP_LOCATION: './5-frontend'
   OUTPUT_LOCATION: 'dist' # Carpeta de build (ej. dist, build)
 
