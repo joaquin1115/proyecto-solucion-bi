@@ -9,7 +9,7 @@ on:
 
 env:
   RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
-  SWA_NAME: 'bbva-dashboard-frontend'
+  SWA_NAME: 'demo-dashboard-frontend'
   APP_LOCATION: './5-frontend'
   OUTPUT_LOCATION: 'dist' # Carpeta de build (ej. dist, build)
 
@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies and build
         run: |

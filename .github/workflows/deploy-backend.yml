@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - '2-backend/**'
+      - '4-backend/**'
   workflow_dispatch:
 
 env:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f ${{ env.DOCKERFILE_PATH }} ./2-backend
+          docker build -t ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -f ${{ env.DOCKERFILE_PATH }} ./4-backend
           docker push ${{ steps.get_acr.outputs.ACR_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Update Container App Image
