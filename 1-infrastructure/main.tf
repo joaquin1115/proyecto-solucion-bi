@@ -143,11 +143,6 @@ module "container_app" {
   environment_name             = var.container_app_environment_name
   subnet_id                    = module.network.containerapp_infra_subnet_id
   log_analytics_workspace_id   = module.log_analytics.workspace_id
-  log_analytics_workspace_key  = module.log_analytics.workspace_shared_key
-  container_image              = var.container_app_image
-  registry_server              = module.container_registry.login_server
-  registry_username            = module.container_registry.admin_username
-  registry_password            = module.container_registry.admin_password
   key_vault_id                 = module.key_vault.key_vault_id
   allowed_cors_origin          = "https://${module.static_web_app.default_host_name}"
   

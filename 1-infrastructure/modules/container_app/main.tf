@@ -39,7 +39,6 @@ resource "azurerm_container_app" "main" {
 
   ingress {
     external_enabled = true
-    # The helloworld container listens on port 80
     target_port      = 5000
     traffic_weight {
       percentage      = 100
