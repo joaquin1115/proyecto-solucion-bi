@@ -8,7 +8,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   storage_mb             = 131072
   sku_name               = "GP_Standard_D2ds_v5"
   zone                   = "1"
-  public_network_access_enabled = false
+  public_network_access_enabled = true
 }
 
 resource "azurerm_postgresql_flexible_server_database" "databases" {
