@@ -12,7 +12,7 @@ env:
   CONTAINER_APP_NAME: 'demo-backend-api'
   ACR_NAME: 'acrdemodashboard'
   IMAGE_NAME: 'api-backend'
-  DOCKERFILE_PATH: './2-backend/Dockerfile'
+  DOCKERFILE_PATH: './4-backend/Dockerfile'
 
 jobs:
   build-and-deploy:

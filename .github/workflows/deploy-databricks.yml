@@ -5,7 +5,7 @@ on:
 
 env:
   KEY_VAULT_NAME: 'kv-demo-dashboard'
-  NOTEBOOKS_PATH: './4-databricks/notebooks'
+  NOTEBOOKS_PATH: './3-databricks-notebooks'
   DATABRICKS_TARGET_PATH: '/Shared/Apps/DemoDashboard' # Ruta de despliegue compartida
 
 jobs:
