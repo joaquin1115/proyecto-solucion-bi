@@ -6,6 +6,7 @@ on:
 env:
   PG_SERVER_NAME: 'pg-demo-dashboard-002'
   PG_ADMIN_USER: 'adminuser'
+  PG_ADMIN_PASSWORD: 'SecurePass123!'
   DB_NAME_PRACTITIONER: 'data_oro_practitioner'
   DB_NAME_CI: 'data_oro_ci'
   RESOURCE_GROUP: 'rg-demo-dashboard'
@@ -41,14 +42,14 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.PG_ADMIN_PASSWORD }}
         run: |
-          psql "host=${{ steps.get_pg_fqdn.outputs.PG_FQDN }} port=5432 dbname=${{ env.DB_NAME_PRACTITIONER }} user=${{ env.PG_ADMIN_USER }} sslmode=require" \
+          psql "host=${{ steps.get_pg_fqdn.outputs.PG_FQDN }} port=5432 dbname=${{ env.DB_NAME_PRACTITIONER }} user=${{ env.PG_ADMIN_USER }} password=${{ env.PG_ADMIN_PASSWORD }} sslmode=require" \
             -f "${{ env.SQL_PRACTITIONER_PATH }}"
 
       - name: Run Continuous Integration SQL script
         env:
           PGPASSWORD: ${{ secrets.PG_ADMIN_PASSWORD }}
         run: |
-          psql "host=${{ steps.get_pg_fqdn.outputs.PG_FQDN }} port=5432 dbname=${{ env.DB_NAME_CI }} user=${{ env.PG_ADMIN_USER }} sslmode=require" \
+          psql "host=${{ steps.get_pg_fqdn.outputs.PG_FQDN }} port=5432 dbname=${{ env.DB_NAME_CI }} user=${{ env.PG_ADMIN_USER }} password=${{ env.PG_ADMIN_PASSWORD }} sslmode=require" \
             -f "${{ env.SQL_CI_PATH }}"
 
       - name: Azure Logout

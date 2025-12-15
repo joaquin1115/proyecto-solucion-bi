@@ -35,7 +35,7 @@ jobs:
 
       - name: Upload Notebooks to Workspace
         run: >
-          databricks workspace import_dir ${{ env.NOTEBOOKS_PATH }} ${{ env.DATABRICKS_TARGET_PATH }} --overwrite
+          databricks workspace import-dir ${{ env.NOTEBOOKS_PATH }} ${{ env.DATABRICKS_TARGET_PATH }} --overwrite
 
       - name: Azure Logout
         run: az logout
